@@ -23,6 +23,7 @@ module.exports = function toReadable(number) {
             case 3: return 'thirty';
             case 4: return 'forty';
             case 5: return 'fifty';
+            case 8: return 'eighty';
             default: return readNine(number) + 'ty';
         }
     }
@@ -45,17 +46,22 @@ module.exports = function toReadable(number) {
             let reminder = number % 10;
             let integer = number / 10;
             let tens = Math.trunc(integer);
-            return readTwoDigit(tens) + ' ' + readNine(reminder);
+
+            return reminder ? readTwoDigit(tens) + ' ' + readNine(reminder) : readTwoDigit(tens);
         }
         else return '';
     }
 
-    if (number >= 0 && number <= 9) { return readNine(number); }
+    if (number === 0) return 'zero';
+    if (number >= 1 && number <= 9) { return readNine(number); }
     else if (number >= 10 && number <= 99) { return readTwoDigitNumber(number); }
     else if (number >= 100) {
         let reminder = number % 100;
         let hundreds = Math.trunc(number / 100);
         let tens = Math.trunc(reminder);
-        return readNine(hundreds) + ' hundred ' + readTwoDigitNumber(reminder) + ' ' + readNine(reminder);
+        let answer = readNine(hundreds);
+        answer = readTwoDigitNumber(reminder) ? answer + ' hundred ' + readTwoDigitNumber(reminder) : answer + ' hundred';
+        answer = readNine(reminder) ? answer + ' ' + readNine(reminder) : answer;
+        return answer;
     }
 }
